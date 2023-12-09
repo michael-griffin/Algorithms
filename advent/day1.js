@@ -1,34 +1,56 @@
-let { parens } = require("./day1_input");
+let fsP = require("fs/promises");
 
-//Day 1, Part 1: If each left paren increments count, and each right paren decrements
-//What is the final count?
-console.log('first slice: ', parens.slice(0,10));
-
-let count = 0;
-for (let val of parens){
-  if (val === "("){
-    count++;
-  }
+async function readFile(){
+  let input = await fsP.readFile("day1-input.txt", "utf8");
+  return input;
 }
 
-// console.log('left parentheses count is: ', count);
-// console.log('right parentheses count is: ', parens.length - count);
-console.log('diff is: ', (count - (parens.length - count)));
 
 
-//Day 1, Part 2: What is the first instance where count hits -1?
-//essentially, loop through, check count as before. If count hits -1, log + break
-//from loop.
-floorCount = 0;
-for (let i = 0; i < parens.length; i++){
-  if (parens[i] === "(") floorCount++;
-  else floorCount--;
+async function sumValues(){
+  let input = await readFile();
+  let regSpace = /\s/;
+  let regNums = /\d/g;
+  let inputArr = input.split(regSpace);
+  //Part 1
+  // let total = inputArr.reduce((acc, item) => {
+  //   let numMatch = item.match(regNums);
 
-  if (floorCount === -1){
-    console.log('hit basement at index: ', i);
-    break;
+  //   numMatch = [numMatch[0], numMatch[numMatch.length - 1]];
+  //   acc = acc + Number(numMatch[0] + numMatch[1]);
+  //   return acc;
+  // }, 0);
+  // console.log('total is: ', total);
+
+
+  //Part 2
+  // let regAllNums = /\d|one|two|three|four|five|six|seven|eight|nine/g;
+
+  let replacements = {
+    one: 'one1one',
+    two: 'two2two',
+    three: 'three3three',
+    four: 'four4four',
+    five: 'five5five',
+    six: 'six6six',
+    seven: 'seven7seven',
+    eight: 'eight8eight',
+    nine: 'nine9nine'
   }
+  // let newArr = ['oneight', '2']; //to test
+
+  let totalTwo = inputArr.reduce((acc, item) => {
+    for (let key in replacements){
+      item = item.replace(key, replacements[key]);
+    }
+
+    let matches = item.match(regNums);
+    matches = [matches[0], matches[matches.length - 1]];
+
+    acc = acc + Number(matches[0] + matches[1]);
+    return acc;
+  }, 0)
+  console.log(totalTwo);
 }
 
-//Note, advent problem explicitly starts at index 1 rather than index 0. So
-//must submit 1 higher.
+sumValues();

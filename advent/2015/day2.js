@@ -3,7 +3,7 @@ const fsP = require("fs/promises");
 async function readMyFile() {
   let contents;
   try {
-    contents = await fsP.readFile("day2-input.txt", "utf8");
+    contents = await fsP.readFile("inputs/day2-input.txt", "utf8");
     // console.log("file contents", contents);
   } catch (err) {
     process.exit(1);

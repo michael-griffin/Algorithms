@@ -18,7 +18,7 @@ let fsP = require('fs/promises');
 
 
 async function readInput(){
-  let input = await fsP.readFile('day3-input.txt', 'utf8');
+  let input = await fsP.readFile('inputs/day3-input.txt', 'utf8');
   // console.log(input);
   return input;
 }
