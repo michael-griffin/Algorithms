@@ -2,16 +2,67 @@
 //Check whether two strings are isomorphic, eg -> hello + rokki
 
 
-//Could be done with a series of replace commands?
-//ie, extract sets of unique letters for each, then pattern of set value 1 ->
-//other set value 1. One nice bit is that set preserves order of insertion.
+//Initial Thought:
+//Could be done with a series of replace commands
+//would extract sets of unique letters for each,
+//then use str.replaceAll(letterSet[i], otherSet[i])
+//One nice bit is that set preserves order of insertion.
 
 //Have to be careful: if hello -> rokki, an intermediate string might be 'rollo'
 //then replacing o would mess things up.
-function isoStrings(letters, otherLetters) {
+
+
+//Follow up:
+//More in line with frequency counters, could use a 'map'
+//pass through letters, map char from string1 to char from string2
+//each char should have a consistent mapping (if a is mapped to b, it should not
+//later be mapped to c)
+
+//May have to do twice, 1 map for string1 -> string2, one for string2 -> string1
+//eg 'bar' -> 'foo' mapping shows no problems {b: 'f', a: 'o', r: 'o'}
+//but 'foo' -> 'bar' mapping would reveal the issue (o is not consistent)
+
+
+//Solution 3: clean shortcut
+function isoStrings(letters, otherLetters){
+  for (let i = 0; i < letters.length; i++) {
+    if (letters.indexOf(letters[i], i + 1) !==
+      otherLetters.indexOf(otherLetters[i], i + 1)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+//Attempt 2:
+function isoStrings(letters, otherLetters){
   if (letters.length !== otherLetters.length) return false;
 
+  const lettersMap = {};
+  const otherMap = {};
+  for (let i = 0; i < letters.length; i++){
+    //check letters -> otherLetters map
+    if (!lettersMap[letters[i]]) {
+      lettersMap[letters[i]] = otherLetters[i];
+    } else if (lettersMap[letters[i]] !== otherLetters[i]){
+      return false;
+    }
 
+    //check otherLetters -> letters map
+    if (!otherMap[otherLetters[i]]) {
+      otherMap[otherLetters[i]] = letters[i];
+    } else if (otherMap[otherLetters[i]] !== letters[i]){
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
+//Attempt 1: via replacement
+function isoStrings(letters, otherLetters) {
   if (letters.length !== otherLetters.length) return false;
 
   const letterSet = Array.from(new Set(letters).values());
@@ -24,6 +75,8 @@ function isoStrings(letters, otherLetters) {
 
   return updated.toLowerCase() === otherLetters;
 }
+
+
 
 
 
