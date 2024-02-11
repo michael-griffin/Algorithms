@@ -37,21 +37,44 @@
 //if prevChar < current (eg IV) subtract currChar - prevChar, then clear prevChar
 //if prevChar is empty -> prevChar becomes currChar (wait for more info).
 
-let romanKey = {
-  'I': 1,
-  'V': 5,
-  'X': 10,
-  'L': 50,
-  'C': 100,
-  'D': 500,
-  'M': 1000,
-}
+//Implementation below works, but will sometimes need to convert a char -> num
+//more than once. A more efficient method might be map characters to values first
+//then iterate over/store previous value
+
 function romanToInteger(romanStr){
+  let romanKey = {
+    'I': 1,
+    'V': 5,
+    'X': 10,
+    'L': 50,
+    'C': 100,
+    'D': 500,
+    'M': 1000,
+  };
+
   let finalNum = 0;
-
   let prevChar = '';
-  for (let char of romanStr){
 
+  for (let currChar of romanStr){
+    if (prevChar.length === 0){
+      prevChar += currChar;
+      continue;
+    }
+
+    let prevVal = romanKey[prevChar];
+    let currVal = romanKey[currChar];
+
+    //If prevChar >= current Add prevChar, then update (now contains just newChar)
+    //if prevChar < current (eg IV) subtract currChar - prevChar, then clear prevChar
+    if (prevVal >= currVal){
+      finalNum += prevVal;
+      prevChar = currChar;
+    } else {
+      finalNum += (currVal - prevVal);
+      prevChar = '';
+    }
   }
+  if (prevChar.length) finalNum += romanKey[prevChar];
+
   return finalNum;
 }
